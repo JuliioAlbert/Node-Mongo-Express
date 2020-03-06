@@ -1,22 +1,29 @@
 //required
 require('./config/bd');
 
-var express = require('express');
-var mongoose = require('mongoose');
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser')
+    //importar Rutas
+const appRoutes = require('./routes/app');
+const libroRoute = require('./routes/libro');
 
 //inicializar variables
-
 var app = express();
 
 
-//rutas
-app.get('/', (req, res, next) => {
-    res.status(200).json({
-        ok: true,
-        mensaje: 'Peticion Correcta'
-    });
-});
-//Conexxion
+//Body Parser
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+// Importar Rutas
+app.use('/libro', libroRoute);
+app.use('/', appRoutes);
+
+
+
+//Conexion
 mongoose.connect(process.env.URLDB, {
     useCreateIndex: true,
     useNewUrlParser: true,
