@@ -10,8 +10,12 @@ let Libro = require('../models/libro');
 //obtener 
 
 app.get('/', (req, res, next) => {
+    var page = req.query.page || 0;
+    page = Number(page);
 
-    Libro.find({}, 'area')
+    Libro.find({})
+        .skip(page)
+        .limit(5)
         .exec(
             (err, libros) => {
 
@@ -22,13 +26,17 @@ app.get('/', (req, res, next) => {
                         errors: err
                     });
                 }
-
-                res.status(200).json({
-                    ok: true,
-                    libros
+                Libro.count({}, (err, conteo) => {
+                    res.status(200).json({
+                        ok: true,
+                        libros,
+                        total: conteo
+                    });
                 });
-            })
+
+            });
 });
+
 
 //crear usuario
 app.post('/', (req, res) => {
@@ -54,7 +62,7 @@ app.post('/', (req, res) => {
     });
     libro.save((err, libroR) => {
         if (err) {
-            returnres.status(500).json({
+            return res.status(500).json({
                 ok: false,
                 mensaje: 'Error crear Lirbo',
                 errors: err

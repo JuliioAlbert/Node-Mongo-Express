@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
 let Schema = mongoose.Schema;
 
@@ -66,5 +67,9 @@ let libroSchema = new Schema({
         required: true
     }
 });
+
+//usar validaciones (mongoose-unique-validator)
+
+libroSchema.plugin(uniqueValidator, { message: '{PATH} El  debe ser unico' })
 
 module.exports = mongoose.model('Libro', libroSchema);
