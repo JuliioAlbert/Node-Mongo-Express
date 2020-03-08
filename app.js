@@ -50,6 +50,7 @@ mongoose.connect(process.env.URLDB, {
 });
 
 //escuchar Peticiones
-app.listen(3001, () => {
-    console.log('Express corriendo Puerto 3000: \x1b[32m%s\x1b[0m', 'online');
+
+app.listen(process.env.PORT, () => {
+    console.log('Escuchando el puerto: ', process.env.PORT);
 });
