@@ -15,7 +15,7 @@ app.get('/', (req, res, next) => {
 
     Libro.find({})
         .skip(page)
-        .limit(5)
+        .limit(30)
         .exec(
             (err, libros) => {
 
