@@ -8,26 +8,31 @@ var Libro = require('../models/libro');
 app.get('/:area', (req, res, next) => {
 
     var area = req.params.area;
+    var regex = new RegExp(area, 'i');
 
-    Libro.find({ area: area}, (err, areaBD) => {
 
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                mensaje: 'Error crear Lirbo',
-                errors: err
+    Promise.all([buscarLibros(area, regex)])
+        .then(respuestas => {
+            res.status(200).json({
+                ok: true,
+                libros: respuestas[0],
+
             });
-        }
 
-        res.status(200).json({
-            ok: true,
-            mensaje: 'Peticion Correcta',
-            areaBD
-        });
-
-    })
-
-   
+        })   
 });
+function buscarLibros(area, regex) {
+
+    return new Promise((resolve, reject) => {
+
+        Libro.find({ area: regex }, (err, libros) => {
+            if (err) {
+                reject('Error al cargar Libros', err);
+            } else {
+                resolve(libros)
+            }
+        });
+    });
+}
 
 module.exports = app;
