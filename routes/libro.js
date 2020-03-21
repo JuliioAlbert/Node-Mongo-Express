@@ -37,7 +37,6 @@ app.get('/', (req, res, next) => {
             });
 });
 
-
 //crear usuario
 app.post('/', (req, res) => {
 

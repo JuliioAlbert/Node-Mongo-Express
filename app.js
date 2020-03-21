@@ -13,6 +13,7 @@ const loginRoute = require('./routes/login');
 const busquedaRoute = require('./routes/busqueda');
 const uploadRoute = require('./routes/upload');
 const imagenesRoute = require('./routes/imagenes');
+const categoriasRoute = require('./routes/categorias');
 
 //inicializar variables
 var app = express();
@@ -37,6 +38,7 @@ app.use('/login', loginRoute);
 app.use('/busqueda', busquedaRoute);
 app.use('/upload', uploadRoute);
 app.use('/img', imagenesRoute);
+app.use('/categorias', categoriasRoute);
 
 
 //Conexion
