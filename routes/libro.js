@@ -147,7 +147,7 @@ app.post('/', (req, res) => {
             //let img = path.resolve(__dirname,`uploads/libros/${nImagen}`);
           
             if (err) {
-                borrarArchivo(img);
+                borrarArchivo(nImagen);
                 return res.status(500).json({
                     ok: true,
                     err
@@ -173,7 +173,7 @@ app.post('/', (req, res) => {
             });
             libro.save((err, libroR) => {
                 if (err) {
-                    borrarArchivo(img);
+                    borrarArchivo(nImagen);
                     return res.status(500).json({
                         ok: false,
                         mensaje: 'Error crear Libro',
@@ -237,7 +237,7 @@ app.post('/', (req, res) => {
 
 });
 function borrarArchivo(nombreImagen) {
-    let pathImage = path.resolve(__dirname, `../../${nombreImagen}`);
+    let pathImage = path.resolve(__dirname, `../../uploads/libros${nombreImagen}`);
     if (fs.existsSync(pathImage)) {
         fs.unlinkSync(pathImage);
     }
