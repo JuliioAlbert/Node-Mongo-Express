@@ -27,7 +27,7 @@ function buscarLibros(busqueda, regex) {
 
     return new Promise((resolve, reject) => {
 
-        Libro.find({ titulo: regex }, (err, libros) => {
+        Libro.find({ titulo: regex}, (err, libros) => {
             if (err) {
                 reject('Error al cargar Libros', err);
             } else {

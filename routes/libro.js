@@ -45,89 +45,21 @@ app.get('/', (req, res, next) => {
 
 //crear usuario
 app.post('/', (req, res) => {
-
+    let host = req.hostname;
     var body = req.body;
     //Si no viene url o imagen se pone no image
     if (!req.files && !body.url) {
-        let NoImage= path.resolve(__dirname,'../assets/no.png');
-        var libro = new Libro({
-            numeroadquisicion: body.numeroadquisicion,
-            titulo: body.titulo,
-            autor: body.autor,
-            clasificacion: body.clasificacion,
-            editorial: body.editorial,
-            ejemplar: body.ejemplar,
-            volumen: body.volumen,
-            tomo: body.tomo,
-            biblioteca: body.biblioteca,
-            material: body.material,
-            coleccion: body.coleccion,
-            numficha: body.numficha,
-            img: NoImage,
-            descripcion: body.descripcion,
-            area: body.area
-        });
-        libro.save((err, libroR) => {
-            if (err) {
-                return res.status(500).json({
-                    ok: false,
-                    mensaje: 'Error crear Lirbo',
-                    errors: err
-                });
-            }
-           
-    
-            res.status(201).json({
-                ok: true,
-                libroR
-            });
-    
-        });
-        
-
-
-
+        let img = `https://${host}/assets/no.png`;
+        registrar(body, res, img);
     } else if (!req.files && body.url) {
-          let img=body.url;
-          var libro = new Libro({
-             numeroadquisicion: body.numeroadquisicion,
-             titulo: body.titulo,
-             autor: body.autor,
-             clasificacion: body.clasificacion,
-             editorial: body.editorial,
-             ejemplar: body.ejemplar,
-             volumen: body.volumen,
-             tomo: body.tomo,
-             biblioteca: body.biblioteca,
-             material: body.material,
-             coleccion: body.coleccion,
-             numficha: body.numficha,
-             img: img,
-             descripcion: body.descripcion,
-             area: body.area
-         });
-         libro.save((err, libroR) => {
-             if (err) {
-                 return res.status(500).json({
-                     ok: false,
-                     mensaje: 'Error crear Lirbo',
-                     errors: err
-                 });
-             }
-     
-             res.status(201).json({
-                 ok: true,
-                 libroR
-             });
-     
-         });
+        let img = body.url;
+        registrar(body, res, img);
     } else if (req.files && !body.url) {
         const imagen = req.files.imagen;
         //Extensiones Permitidas
         const nombreImagen = imagen.name.split('.');
         const extension = nombreImagen[nombreImagen.length - 1];
         const extensionesValidas = ['jpg', 'jpeg', 'png'];
-
         if (extensionesValidas.indexOf(extension) < 0) {
             return res.status(400).json({
                 ok: false,
@@ -136,112 +68,65 @@ app.post('/', (req, res) => {
                 }
             });
         }
-
         //Cambiar Nombre al archivo
         const nImagen = `${body.area}${body.cantidad}${body.numeroadquisicion}-${new Date().getMilliseconds()}.${extension}`
-
-
         imagen.mv(`public/libros/${nImagen}`, (err) => {
-            let host=req.hostname;
             let img = `https://${host}/libros/${nImagen}`;
-            //let img = path.resolve(__dirname,`uploads/libros/${nImagen}`);
-          
             if (err) {
-                borrarArchivo(nImagen);
-                return res.status(500).json({
-                    ok: true,
+                return res.status.json({
+                    ok: false,
                     err
                 })
-            };
-            var libro = new Libro({
-                numeroadquisicion: body.numeroadquisicion,
-                titulo: body.titulo,
-                autor: body.autor,
-                clasificacion: body.clasificacion,
-                editorial: body.editorial,
-                ejemplar: body.ejemplar,
-                volumen: body.volumen,
-                tomo: body.tomo,
-                biblioteca: body.biblioteca,
-                material: body.material,
-                coleccion: body.coleccion,
-                numficha: body.numficha,
-                img: img,
-                descripcion: body.descripcion,
-                area: body.area,
-                cantidad: body.cantidad
-            });
-            libro.save((err, libroR) => {
-                if (err) {
-                    borrarArchivo(nImagen);
-                    return res.status(500).json({
-                        ok: false,
-                        mensaje: 'Error crear Libro',
-                        errors: err
-                    });
-                }
-                res.status(201).json({
-                    ok: true,
-                    libroR
-                });
-
-            });
-
-
-
-
-        });
-
-    } else if (req.files && body.url) {
-
-        res.json({
-            ok: true,
-            mensaje: "Vienen Los Dos"
-        })
-    }
-    /* 
-        var libro = new Libro({
-            numeroadquisicion: body.numeroadquisicion,
-            titulo: body.titulo,
-            autor: body.autor,
-            clasificacion: body.clasificacion,
-            editorial: body.editorial,
-            ejemplar: body.ejemplar,
-            volumen: body.volumen,
-            tomo: body.tomo,
-            biblioteca: body.biblioteca,
-            material: body.material,
-            coleccion: body.coleccion,
-            numficha: body.numficha,
-            img: body.img,
-            descripcion: body.descripcion,
-            area: body.area
-        });
-        libro.save((err, libroR) => {
-            if (err) {
-                return res.status(500).json({
-                    ok: false,
-                    mensaje: 'Error crear Lirbo',
-                    errors: err
-                });
             }
-    
-            res.status(201).json({
-                ok: true,
-                libroR
-            });
-    
-        });
-     */
+            registrar(body, res, img, nImagen);
 
+        });
+    } else if (req.files && body.url) {
+        let img = body.url;
+        registrar(body, res, img);
+    }
 
 });
 function borrarArchivo(nombreImagen) {
-    let pathImage = path.resolve(__dirname, `../../uploads/libros${nombreImagen}`);
+    let pathImage = path.resolve(__dirname, `../public/libros/${nombreImagen}`);
     if (fs.existsSync(pathImage)) {
         fs.unlinkSync(pathImage);
     }
+}
 
+function registrar(body, res, img, nImagen) {
+    var libro = new Libro({
+        numeroadquisicion: body.numeroadquisicion,
+        titulo: body.titulo,
+        autor: body.autor,
+        clasificacion: body.clasificacion,
+        editorial: body.editorial,
+        ejemplar: body.ejemplar,
+        volumen: body.volumen,
+        tomo: body.tomo,
+        biblioteca: body.biblioteca,
+        material: body.material,
+        coleccion: body.coleccion,
+        numficha: body.numficha,
+        img: img,
+        descripcion: body.descripcion,
+        area: body.area
+    });
+    libro.save((err, libroR) => {
+        if (err) {
+            borrarArchivo(nImagen)
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error crear Lirbo',
+                errors: err
+            });
+        }
+        res.status(201).json({
+            ok: true,
+            libroR
+        });
+
+    });
 }
 
 
