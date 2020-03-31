@@ -143,7 +143,7 @@ app.post('/', (req, res) => {
 
         imagen.mv(`public/libros/${nImagen}`, (err) => {
             let host=req.hostname;
-            let img = `${host}/libros/${nImagen}`;
+            let img = `https://${host}/libros/${nImagen}`;
             //let img = path.resolve(__dirname,`uploads/libros/${nImagen}`);
           
             if (err) {
