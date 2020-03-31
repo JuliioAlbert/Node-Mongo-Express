@@ -138,7 +138,7 @@ app.post('/', (req, res) => {
         }
 
         //Cambiar Nombre al archivo
-        const nImagen = `${body.area}${body.titulo}-${new Date().getMilliseconds()}.${extension}`
+        const nImagen = `${body.area}${body.cantidad}${body.numeroadquisicion}-${new Date().getMilliseconds()}.${extension}`
 
 
         imagen.mv(`public/libros/${nImagen}`, (err) => {
