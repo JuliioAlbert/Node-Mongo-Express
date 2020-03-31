@@ -25,14 +25,14 @@ app.get('/', (req, res, next) => {
             (err, usuarios) => {
 
                 if (err) {
-                    return res.status(500).json({
+                    return res.status(406).json({
                         ok: false,
                         mensaje: 'Error cargando usuario',
                         errors: err
                     });
                 }
 
-                Usuario.count({}, (err, conteo) => {
+                Usuario.countDocuments({}, (err, conteo) => {
 
                     res.status(200).json({
                         ok: true,
@@ -109,27 +109,25 @@ app.put('/:id', (req, res) => {
 //===================================
 //crear usuario
 //===================================
-app.post('/', mdAutenticacion.verificaToken, (req, res) => {
+app.post('/', (req, res) => {
     var body = req.body;
     var usuario = new Usuario({
-        nocontrol: body.nocontrol,
-        nip: body.nip,
-        img: body.img,
-        role: body.role
+        nombre: body.nombre,
+        rfc: body.rfc,
+        password: body.password,
     });
     usuario.save((err, usuarioR) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
                 mensaje: 'Error crear usuario',
-                err
+                error: err 
             });
         }
 
         res.status(201).json({
             ok: true,
             usuarioR,
-            usuariotoken: req.usuario
         });
 
     });

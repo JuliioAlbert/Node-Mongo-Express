@@ -13,7 +13,7 @@ const Usuario = require('../models/usuario');
 
 
 //Middelware
-app.use(fileUpload());
+app.use( fileUpload({ useTempFiles: true }) );
 
 
 //rutas

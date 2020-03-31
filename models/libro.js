@@ -7,7 +7,6 @@ let libroSchema = new Schema({
     numeroadquisicion: {
         type: Number,
         required: [true, 'Es necesario'],
-
     },
     titulo: {
         unique: false,
@@ -15,6 +14,7 @@ let libroSchema = new Schema({
         required: [true, 'Es necesario']
     },
     autor: {
+        
         type: String,
         required: [true, 'Es necesario']
     },
@@ -56,7 +56,7 @@ let libroSchema = new Schema({
     },
     img: {
         type: String,
-        default: "url"
+        default: ""
     },
     descripcion: {
         type: String,
@@ -65,6 +65,10 @@ let libroSchema = new Schema({
     area: {
         type: String,
         required: true
+    },
+    cantidad:{
+        type:Number,
+        default: 1
     }
 });
 

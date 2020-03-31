@@ -9,23 +9,19 @@ let rolesValidos = {
 };
 
 let usuarioSchema = new Schema({
-    nocontrol: {
-        type: Number,
-        required: [true, 'El numero de control es necesario']
-    },
-    nip: {
-        type: Number,
-        required: [true, 'El nip es necesario']
-    },
-    img: {
+    nombre: {
         type: String,
-        required: false
+        required: [true, 'El nombre  es necesario en el backend']
     },
-    role: {
+    rfc: {
+        unique: [true, 'Ya existe el RFC '],
         type: String,
-        required: true,
-        default: 'Estudiante',
-        enum: rolesValidos
-    }
+        required: [true, 'El rfc es necesario en el backend']
+    },
+    password: {
+        type: String,
+        required: [true, 'El Password es necesarios']
+    },
 });
+usuarioSchema.plugin(uniqueValidator);
 module.exports = mongoose.model('Usuario', usuarioSchema);
